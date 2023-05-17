@@ -1,0 +1,76 @@
+CREATE OR REPLACE FUNCTION happy_number (num NUMBER) RETURN BOOLEAN IS
+	digit NUMBER;
+	sum_of_squares NUMBER := 0;
+	temp_num NUMBER:= num; --num ı atamak için geçici bir değişken
+	temp NUMBER; -- sum_of_squares ı atamak için geçici değişken	
+
+BEGIN 
+    
+    IF num = 1 THEN 
+    
+    	RETURN TRUE;
+
+	ELSIF num IN (4, 16, 37, 58, 89, 145, 42, 20) THEN
+        
+        RETURN FALSE; 	 
+
+	ELSE 
+        
+		WHILE temp_num >0 
+		LOOP        	
+			digit := MOD(temp_num,10);
+    			sum_of_squares := sum_of_squares + (digit * digit);
+			temp_num := TRUNC(temp_num / 10);
+		END LOOP;
+
+		temp := sum_of_squares;
+
+		WHILE temp <> 1 
+		LOOP            
+			sum_of_squares:= 0;
+			temp_num := temp;
+
+			WHILE temp_num >0 
+			LOOP
+				digit := MOD(temp_num,10);		
+				sum_of_squares := sum_of_squares + (digit * digit);
+				temp_num := TRUNC(temp_num / 10);
+			END LOOP;
+
+			temp := sum_of_squares;
+
+		END LOOP;
+	
+		IF temp = 1 THEN
+            
+			RETURN TRUE; 
+		
+		ELSE
+            
+			RETURN FALSE; 
+
+		END IF;
+	END IF;
+END;
+
+/
+    
+DECLARE
+      result BOOLEAN;
+	n NUMBER := 4;
+BEGIN
+    
+	result := happy_number(n);
+    
+	IF result = TRUE THEN
+        
+        DBMS_OUTPUT.PUT_LINE(n || ' is a Happy Number');
+
+	ELSE
+        
+        DBMS_OUTPUT.PUT_LINE( n ||' is not a Happy Number');
+
+	END IF;
+END;
+
+/
